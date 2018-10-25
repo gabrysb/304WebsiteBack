@@ -1,0 +1,21 @@
+{
+  "name": "304cemwebbackend",
+  "version": "1.0.0",
+  "description": "304CEMServer",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.16.4",
+    "swig": "^1.4.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.coventry.ac.uk/gabrysb/304CEM-BarbaraGabrys-6210272-Back.git"
+  },
+  "author": "gabrysb",
+  "license": "ISC"
+}
