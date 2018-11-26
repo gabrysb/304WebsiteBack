@@ -24,8 +24,8 @@ const databaseData = {
 //save server port on global variable
 var port = 8080;
 
-//route any requests to http://localhost:8080/process_contact_submissio to this function
-app.post('/index, (req, res) => {
+//route any requests to http://localhost:8080/process_contact_submission to this function
+app.post('/process_contact_submission', (req, res) => {
 	message.add(databaseData, req, function (err, data){
 		//when adding a user is done this code will run
 		//if we got an error informs the client and set the proper response code
