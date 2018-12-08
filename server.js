@@ -27,8 +27,8 @@ server.use(express.static('public'));
 const databaseData = { 
 	host:"localhost",
 	user:"root",
-	password: "",
-	database: "oktob"
+	password: "Pa55w0rd",
+	database: "mywebsite"
 };
 //save server port on global variable
 var port = 8080;
