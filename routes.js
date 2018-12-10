@@ -14,6 +14,117 @@ const auth = require('./authentication');
 
 exports.allRoutes = function (databaseData, server) {
 
+    //------------Test Routes-----------------
+    server.post('/api/v1.0/test', (req, res) => {
+    
+        //ectract data from request
+        let testData = {
+            testField: req.body['testField'],
+        }
+        
+        //we are atempting to add a user
+        test.add(databaseData, testData, function (err, data){
+            
+            res.setHeader('content-type', 'application/json')
+            res.setHeader('accepts', 'GET, POST')
+            //when adding a user is done, this code will run
+            //if we got an error informs the client and set the proper response code
+            if(err){
+                res.status(400);
+                res.end("error:" + err);
+                return;
+            }
+            //if no error let's set proper response code and have a party
+            res.status(201);
+            res.end(JSON.stringify({message:"test added successfully"}));
+        });
+    })
+
+    server.get('/api/v1.0/test', (req, res) => {
+        
+        //TODO: extract pagination & search parameters
+
+        let testData = {
+            
+        };
+
+        test.getAll(databaseData, testData, function (err, result){
+        
+            res.setHeader('content-type', 'application/json')
+            res.setHeader('accepts', 'GET')
+
+            if(err){
+                res.status(400);
+                res.end("error:" + err);
+                return;
+            }
+            
+            res.status(200);
+            res.end(JSON.stringify(result));
+        });
+    })
+
+    server.get('/api/v1.0/test/:id', (req, res) => {
+
+        let testData = {
+            id : req.params.id
+        }
+        //we are atempting to retrieve one user
+        //note that we get the user id through the req.params.id, id matches the path parameter name 
+        test.getById(databaseData, testData, function (err, result){
+            
+            res.setHeader('content-type', 'application/json')
+            res.setHeader('accepts', 'GET')
+            
+            if(err){
+                res.status(400);
+                res.end("error:" + err);
+                return;
+            }
+            res.status(200);
+            res.end(JSON.stringify(result));
+        });
+    })
+
+    server.delete('/api/v1.0/test/:id',(req, res) => {
+        
+        let testData = {
+            id : req.params.id
+        }
+
+        test.deleteById(databaseData, testData, function (err, result){
+            
+            if(err){
+                res.status(400);
+                res.end("error:" + err);
+                return;
+            }
+            res.status(201);
+            res.end(JSON.stringify(result));
+        });
+
+    });
+
+    server.put('/api/v1.0/users/:id', (req, res) => {
+        
+        let testData = {
+            id : req.params.id,
+            testField: req.body['testField'],
+        }
+        //we are atempting to update a test field
+        test.updateById(databaseData, testData, function (err, result){
+            
+            if(err){
+                res.status(400);
+                res.end("error:" + err);
+                return;
+            }
+            
+            res.status(200);
+            res.end(JSON.stringify(result));
+        });
+    });
+
     //------------Users Routes-----------------
     server.post('/api/v1.0/users', (req, res) => {
     
