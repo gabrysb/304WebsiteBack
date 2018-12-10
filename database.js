@@ -46,7 +46,9 @@ exports.createTables = function (conData, callback){
 
 	sql += ";" + "CREATE TABLE Subscriptions (id INT NOT NULL AUTO_INCREMENT, userId INT, creatorId INT, PRIMARY KEY (id) )";
 	
-	sql += ";" + "CREATE TABLE Comments (id INT NOT NULL AUTO_INCREMENT, authorId INT, rrecipeId INT, text LONGTEXT, commentParent INT, PRIMARY KEY (id) )";
+	sql += ";" + "CREATE TABLE Comments (id INT NOT NULL AUTO_INCREMENT, authorId INT, recipeId INT, text LONGTEXT, commentParent INT, PRIMARY KEY (id) )";
+
+	sql += ";" + "CREATE TABLE Test (id INT NOT NULL AUTO_INCREMENT, testField INT, PRIMARY KEY (id) )";
 
 	con.query(sql, function (err, result) {
 		//console.log("finish query:" + result);
