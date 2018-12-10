@@ -1,7 +1,7 @@
 'use strict'
 
 const user = require('./models/user');
-const blog = require('./models/blog');
+const recipes = require('./models/recipes');
 
 //this package we need it to generate some random strings 
 const randomstring = require('randomstring');
@@ -81,11 +81,11 @@ exports.addUsers = function(conData){
 
 //----------------Add Random Blogs ----------------
 
-let blogData = [];
+let recipeData = [];
 
-let addBlog = function(conData, blogData){
+let addRecipes = function(conData, recipeData){
     
-    blog.add(conData, blogData, function (err, data){
+    recipes.add(conData, recipeData, function (err, data){
     
         if(err){
             console.log("the following error occured:" + err);
@@ -94,25 +94,31 @@ let addBlog = function(conData, blogData){
     });
 };
 
-exports.addBlogs = function(conData){
+exports.addRecipes = function(conData){
 
     for( let i = 0; i < 24; i++){
 
         let imgNum = (i % 8) + 1;
-        let tempBlog = {
+        let tempRecipe = {
             title: randomParagraph(4, 8),
             authorId: Math.random() * (8 - 1) + 1,
-            body: randomParagraph(100, 300),
+            description: randomParagraph(100, 300),
+            ingredients: randomParagraph(100, 300),
             createdDate: new Date(),
-            photo: 'http://localhost:8080/img/img' + imgNum + '.jpeg'
+            photo: 'http://localhost:8080/img/img' + imgNum + '.jpeg',
+            keywords: randomWord(1, 5),
+            category: randomWord(1, 1),
+            rating: Math.random() * (8 - 1) + 1,
+            views: Math.random() * (8 - 1) + 1,
+            status: randomWord(1, 1)
         };
 
-        blogData.push(tempBlog);
+        recipeData.push(tempRecipe);
     }
     
-    blogData.forEach(async element => {
+    recipeData.forEach(async element => {
 
-        addBlog(conData, element);
+        addRecipes(conData, element);
     });
 };
 

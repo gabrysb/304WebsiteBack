@@ -1,6 +1,8 @@
 'use strict'
 //import user module
 const user = require('./models/user');
+//import test module
+const test = require('./models/test');
 //import our product module which handles all CRUD operations on products
 const blog = require('./models/blog');
 //import the login module
@@ -19,7 +21,7 @@ exports.allRoutes = function (databaseData, server) {
     
         //ectract data from request
         let testData = {
-            testField: req.body['testField'],
+            testField: req.body['testField']
         }
         
         //we are atempting to add a user
@@ -278,8 +280,8 @@ exports.allRoutes = function (databaseData, server) {
             });
         });
     });
-    //------------blogs Routes-----------------
-    server.post('/api/v1.0/blogs', (req, res) => {
+    //------------Recipes Routes-----------------
+    server.post('/api/v1.0/recipes', (req, res) => {
         
         let blogData = {
 			title: req.body['title'],
@@ -289,7 +291,7 @@ exports.allRoutes = function (databaseData, server) {
 			photo: req.body['photo'] 
         };
         
-        blog.add(databaseData, blogData, function (err, result){
+        blog.add(databaseData, recipeData, function (err, result){
             
             if(err){
                 res.status(400);
@@ -302,13 +304,13 @@ exports.allRoutes = function (databaseData, server) {
         });
     })
 
-    server.get('/api/v1.0/blogs', (req, res) => {
+    server.get('/api/v1.0/recipes', (req, res) => {
         
         //TODO: extract pagination and search parameters
-        let blogData = {
+        let recipeData = {
 
         }
-        blog.getAll(databaseData, blogData, function (err, result){
+        blog.getAll(databaseData, recipeData, function (err, result){
         
             res.setHeader('content-type', 'application/json')
             res.setHeader('accepts', 'GET')
@@ -323,13 +325,13 @@ exports.allRoutes = function (databaseData, server) {
         });
     })
 
-    server.get('/api/v1.0/blogs/:id', (req, res) => {
+    server.get('/api/v1.0/recipes/:id', (req, res) => {
 
-        let blogData = {
+        let recipeData = {
             id : req.params.id
         }
 
-        blog.getById(databaseData, blogData, function (err, result){
+        blog.getById(databaseData, recipeData, function (err, result){
             
             res.setHeader('content-type', 'application/json')
             res.setHeader('accepts', 'GET')
@@ -344,13 +346,13 @@ exports.allRoutes = function (databaseData, server) {
         });
     })
 
-    server.delete('/api/v1.0/blogs/:id',(req, res) => {
+    server.delete('/api/v1.0/recipes/:id',(req, res) => {
         
-        let blogData = {
+        let recipeData = {
             id : req.params.id
         }
 
-        blog.deleteById(databaseData, blogData, function (err, result){
+        blog.deleteById(databaseData, recipeData, function (err, result){
             
             if(err){
                 res.status(400);
@@ -363,9 +365,9 @@ exports.allRoutes = function (databaseData, server) {
 
     });
 
-    server.put('/api/v1.0/blogs/:id', (req, res) => {
+    server.put('/api/v1.0/recipes/:id', (req, res) => {
         
-        let blogData = {
+        let recipeData = {
             id : req.params.id,
             title: req.body['title'],
 			authorId: req.body['authorId'],
@@ -374,7 +376,7 @@ exports.allRoutes = function (databaseData, server) {
 			photo: req.body['photo'] 
         }
 
-        blog.updateById(databaseData, blogData, function (err, result){
+        blog.updateById(databaseData, recipeData, function (err, result){
             
             if(err){
                 res.status(400);
@@ -513,7 +515,7 @@ exports.allRoutes = function (databaseData, server) {
 
         //dump some users and blogs data
         dump.addUsers(databaseData);
-        dump.addBlogs(databaseData);
+        dump.addRecipes(databaseData);
 
         res.status(200);
         res.end("dump data were added successfully");
