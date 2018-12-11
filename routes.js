@@ -3,8 +3,12 @@
 const user = require('./models/user');
 //import test module
 const test = require('./models/test');
+//import test module
+const comment = require('./models/comments');
+//import test module
+const lists = require('./models/lists');
 //import our product module which handles all CRUD operations on products
-const blog = require('./models/blog');
+const recipe = require('./models/recipes');
 //import the login module
 const login = require('./models/login')
 //import our database module which handles most of general db operations
@@ -136,6 +140,7 @@ exports.allRoutes = function (databaseData, server) {
             password: req.body['password'],
             firstName: req.body['firstName'],
             lastName: req.body['lastName'],
+            email: req.body['email'],
             registrationDate : req.body['registrationDate']
         }
         //we are atempting to add a user
@@ -229,6 +234,7 @@ exports.allRoutes = function (databaseData, server) {
             password: req.body['password'],
             firstName: req.body['firstName'],
             lastName: req.body['lastName'],
+            email: req.body['email'],
             registrationDate : req.body['registrationDate']
         }
         //we are atempting to update a user
@@ -280,18 +286,27 @@ exports.allRoutes = function (databaseData, server) {
             });
         });
     });
+
+
     //------------Recipes Routes-----------------
     server.post('/api/v1.0/recipes', (req, res) => {
         
-        let blogData = {
+        let recipeData = {
 			title: req.body['title'],
 			authorId: req.body['authorId'],
-			body: req.body['body'],
+            description: req.body['body'],
+            ingredients: req.body['ingredients'],
+            steps: req.body['steps'],
 			createdDate: new Date(),
-			photo: req.body['photo'] 
+            photo: req.body['photo'], 
+            keywords: req.body['keywords'],
+            category: req.body['category'],
+            rating: 0,
+            views: 0,
+            status: req.body['status']
         };
         
-        blog.add(databaseData, recipeData, function (err, result){
+        recipe.add(databaseData, recipeData, function (err, result){
             
             if(err){
                 res.status(400);
@@ -310,7 +325,7 @@ exports.allRoutes = function (databaseData, server) {
         let recipeData = {
 
         }
-        blog.getAll(databaseData, recipeData, function (err, result){
+        recipe.getAll(databaseData, recipeData, function (err, result){
         
             res.setHeader('content-type', 'application/json')
             res.setHeader('accepts', 'GET')
@@ -331,7 +346,7 @@ exports.allRoutes = function (databaseData, server) {
             id : req.params.id
         }
 
-        blog.getById(databaseData, recipeData, function (err, result){
+        recipe.getById(databaseData, recipeData, function (err, result){
             
             res.setHeader('content-type', 'application/json')
             res.setHeader('accepts', 'GET')
@@ -352,7 +367,7 @@ exports.allRoutes = function (databaseData, server) {
             id : req.params.id
         }
 
-        blog.deleteById(databaseData, recipeData, function (err, result){
+        recipe.deleteById(databaseData, recipeData, function (err, result){
             
             if(err){
                 res.status(400);
@@ -368,15 +383,21 @@ exports.allRoutes = function (databaseData, server) {
     server.put('/api/v1.0/recipes/:id', (req, res) => {
         
         let recipeData = {
-            id : req.params.id,
             title: req.body['title'],
 			authorId: req.body['authorId'],
-			body: req.body['body'],
+            description: req.body['body'],
+            ingredients: req.body['ingredients'],
+            steps: req.body['steps'],
 			createdDate: new Date(),
-			photo: req.body['photo'] 
+            photo: req.body['photo'], 
+            keywords: req.body['keywords'],
+            category: req.body['category'],
+            rating: 0,
+            views: 0,
+            status: req.body['status']
         }
 
-        blog.updateById(databaseData, recipeData, function (err, result){
+        recipe.updateById(databaseData, recipeData, function (err, result){
             
             if(err){
                 res.status(400);
@@ -389,16 +410,15 @@ exports.allRoutes = function (databaseData, server) {
         });
     });
 
-
-    //------------Favourites Routes-----------------
-    server.post('/api/v1.0/favourites', (req, res) => {
+    //------------Subscription Routes-----------------
+    server.post('/api/v1.0/subscriptions', (req, res) => {
         
-        let favData = {
+        let subData = {
 			userId: req.body['userId'],
-			blogId: req.body['blogId']
+			creatorId: req.body['creatorId']
         };
         
-        favourites.add(databaseData, favData, function (err, result){
+        subscription.add(databaseData, subData, function (err, result){
             
             if(err){
                 res.status(400);
@@ -411,13 +431,13 @@ exports.allRoutes = function (databaseData, server) {
         });
     })
 
-    server.get('/api/v1.0/favourites', (req, res) => {
+    server.get('/api/v1.0/subscriptions', (req, res) => {
         
         //TODO: extract pagination and search parameters
-        let favData = {
-            userId : req.query.userId
+        let subData = {
+
         }
-        favourites.getAll(databaseData, favData, function (err, result){
+        subscription.getAll(databaseData, subData, function (err, result){
         
             res.setHeader('content-type', 'application/json')
             res.setHeader('accepts', 'GET')
@@ -432,13 +452,13 @@ exports.allRoutes = function (databaseData, server) {
         });
     })
 
-    server.get('/api/v1.0/favourites/:id', (req, res) => {
+    server.get('/api/v1.0/subscriptions/:id', (req, res) => {
 
-        let favData = {
+        let subData = {
             id : req.params.id
         }
 
-        favourites.getById(databaseData, favData, function (err, result){
+        subscription.getById(databaseData, subData, function (err, result){
             
             res.setHeader('content-type', 'application/json')
             res.setHeader('accepts', 'GET')
@@ -453,13 +473,13 @@ exports.allRoutes = function (databaseData, server) {
         });
     })
 
-    server.delete('/api/v1.0/favourites/:id',(req, res) => {
+    server.delete('/api/v1.0/subscriptions/:id',(req, res) => {
         
-        let favData = {
+        let subData = {
             id : req.params.id
         }
 
-        favourites.deleteById(databaseData, favData, function (err, result){
+        subscription.deleteById(databaseData, subData, function (err, result){
             
             if(err){
                 res.status(400);
@@ -472,15 +492,224 @@ exports.allRoutes = function (databaseData, server) {
 
     });
 
-    server.put('/api/v1.0/favourites/:id', (req, res) => {
+    server.put('/api/v1.0/subscriptions/:id', (req, res) => {
         
-        let favData = {
-            id : req.params.id,
+        let subData = {
             userId: req.body['userId'],
-			blogId: req.body['blogId']
+			creatorId: req.body['creatorId']
         }
 
-        favourites.updateById(databaseData, favData, function (err, result){
+        subscription.updateById(databaseData, subData, function (err, result){
+            
+            if(err){
+                res.status(400);
+                res.end("error:" + err);
+                return;
+            }
+            
+            res.status(200);
+            res.end(JSON.stringify(result));
+        });
+    });
+
+    //------------Comments Routes-----------------
+    server.post('/api/v1.0/comments', (req, res) => {
+        
+        let commentData = {
+			listname: req.body['listname'],
+			recipeid: req.body['recipeid'],
+            userId: req.body['userId']
+        };
+        
+        comment.add(databaseData, commentData, function (err, result){
+            
+            if(err){
+                res.status(400);
+                res.end("error:" + err);
+                return;
+            }
+            
+            res.status(201);
+            res.end(JSON.stringify(result));
+        });
+    })
+
+    server.get('/api/v1.0/comments', (req, res) => {
+        
+        //TODO: extract pagination and search parameters
+        let commentData = {
+
+        }
+        comment.getAll(databaseData, commentData, function (err, result){
+        
+            res.setHeader('content-type', 'application/json')
+            res.setHeader('accepts', 'GET')
+            
+            if(err){
+                res.status(400);
+                res.end("error:" + err);
+                return;
+            }
+            res.status(200);
+            res.end(JSON.stringify(result));
+        });
+    })
+
+    server.get('/api/v1.0/comments/:id', (req, res) => {
+
+        let commentData = {
+            id : req.params.id
+        }
+
+        comment.getById(databaseData, commentData, function (err, result){
+            
+            res.setHeader('content-type', 'application/json')
+            res.setHeader('accepts', 'GET')
+            
+            if(err){
+                res.status(400);
+                res.end("error:" + err);
+                return;
+            }
+            res.status(200);
+            res.end(JSON.stringify(result));
+        });
+    })
+
+    server.delete('/api/v1.0/comments/:id',(req, res) => {
+        
+        let commentData = {
+            id : req.params.id
+        }
+
+        comment.deleteById(databaseData, commentData, function (err, result){
+            
+            if(err){
+                res.status(400);
+                res.end("error:" + err);
+                return;
+            }
+            res.status(200);
+            res.end(JSON.stringify(result));
+        });
+
+    });
+
+    server.put('/api/v1.0/comments/:id', (req, res) => {
+        
+        let commentData = {
+            listname: req.body['listname'],
+			recipeid: req.body['recipeid'],
+            userId: req.body['userId']
+        }
+
+        comment.updateById(databaseData, commentData, function (err, result){
+            
+            if(err){
+                res.status(400);
+                res.end("error:" + err);
+                return;
+            }
+            
+            res.status(200);
+            res.end(JSON.stringify(result));
+        });
+    });
+
+
+    //------------Lists Routes-----------------
+    server.post('/api/v1.0/lists', (req, res) => {
+        
+        let listData = {
+			listname: req.body['listname'],
+            recipeid: req.body['recipeid'],
+            userId: req.body['userId']
+        };
+        
+        lists.add(databaseData, listData, function (err, result){
+            
+            if(err){
+                res.status(400);
+                res.end("error:" + err);
+                return;
+            }
+            
+            res.status(201);
+            res.end(JSON.stringify(result));
+        });
+    })
+
+    server.get('/api/v1.0/lists', (req, res) => {
+        
+        //TODO: extract pagination and search parameters
+        let favData = {
+            userId : req.query.userId
+        }
+        lists.getAll(databaseData, listData, function (err, result){
+        
+            res.setHeader('content-type', 'application/json')
+            res.setHeader('accepts', 'GET')
+            
+            if(err){
+                res.status(400);
+                res.end("error:" + err);
+                return;
+            }
+            res.status(200);
+            res.end(JSON.stringify(result));
+        });
+    })
+
+    server.get('/api/v1.0/lists/:id', (req, res) => {
+
+        let favData = {
+            id : req.params.id
+        }
+
+        lists.getById(databaseData, listData, function (err, result){
+            
+            res.setHeader('content-type', 'application/json')
+            res.setHeader('accepts', 'GET')
+            
+            if(err){
+                res.status(400);
+                res.end("error:" + err);
+                return;
+            }
+            res.status(200);
+            res.end(JSON.stringify(result));
+        });
+    })
+
+    server.delete('/api/v1.0/lists/:id',(req, res) => {
+        
+        let listData = {
+            id : req.params.id
+        }
+
+        lists.deleteById(databaseData, listData, function (err, result){
+            
+            if(err){
+                res.status(400);
+                res.end("error:" + err);
+                return;
+            }
+            res.status(200);
+            res.end(JSON.stringify(result));
+        });
+
+    });
+
+    server.put('/api/v1.0/lists/:id', (req, res) => {
+        
+        let listData = {
+            id : req.params.id,
+            listname: req.body['listname'],
+            recipeid: req.body['recipeid'],
+            userId: req.body['userId']
+        }
+
+        lists.updateById(databaseData, listData, function (err, result){
             
             if(err){
                 res.status(400);
@@ -492,6 +721,8 @@ exports.allRoutes = function (databaseData, server) {
             res.end(JSON.stringify(result));
         });
     })
+
+
 
     //this route will allow to create tables in the database
     //it should be a confidential method and can be performed only by an admin
