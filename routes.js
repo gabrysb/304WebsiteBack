@@ -4,11 +4,11 @@ const user = require('./models/user');
 //import test module
 const test = require('./models/test');
 //import test module
-const test = require('./models/comments');
+const comment = require('./models/comments');
 //import test module
-const test = require('./models/lists');
+const lists = require('./models/lists');
 //import our product module which handles all CRUD operations on products
-const blog = require('./models/recipes');
+const recipe = require('./models/recipes');
 //import the login module
 const login = require('./models/login')
 //import our database module which handles most of general db operations
@@ -418,7 +418,7 @@ exports.allRoutes = function (databaseData, server) {
 			creatorId: req.body['creatorId']
         };
         
-        recipe.add(databaseData, subData, function (err, result){
+        subscription.add(databaseData, subData, function (err, result){
             
             if(err){
                 res.status(400);
@@ -437,7 +437,7 @@ exports.allRoutes = function (databaseData, server) {
         let subData = {
 
         }
-        recipe.getAll(databaseData, subData, function (err, result){
+        subscription.getAll(databaseData, subData, function (err, result){
         
             res.setHeader('content-type', 'application/json')
             res.setHeader('accepts', 'GET')
@@ -458,7 +458,7 @@ exports.allRoutes = function (databaseData, server) {
             id : req.params.id
         }
 
-        recipe.getById(databaseData, subData, function (err, result){
+        subscription.getById(databaseData, subData, function (err, result){
             
             res.setHeader('content-type', 'application/json')
             res.setHeader('accepts', 'GET')
@@ -479,7 +479,7 @@ exports.allRoutes = function (databaseData, server) {
             id : req.params.id
         }
 
-        recipe.deleteById(databaseData, subData, function (err, result){
+        subscription.deleteById(databaseData, subData, function (err, result){
             
             if(err){
                 res.status(400);
@@ -499,7 +499,7 @@ exports.allRoutes = function (databaseData, server) {
 			creatorId: req.body['creatorId']
         }
 
-        recipe.updateById(databaseData, subData, function (err, result){
+        subscription.updateById(databaseData, subData, function (err, result){
             
             if(err){
                 res.status(400);
@@ -521,7 +521,7 @@ exports.allRoutes = function (databaseData, server) {
             userId: req.body['userId']
         };
         
-        recipe.add(databaseData, commentData, function (err, result){
+        comment.add(databaseData, commentData, function (err, result){
             
             if(err){
                 res.status(400);
@@ -540,7 +540,7 @@ exports.allRoutes = function (databaseData, server) {
         let commentData = {
 
         }
-        recipe.getAll(databaseData, commentData, function (err, result){
+        comment.getAll(databaseData, commentData, function (err, result){
         
             res.setHeader('content-type', 'application/json')
             res.setHeader('accepts', 'GET')
@@ -561,7 +561,7 @@ exports.allRoutes = function (databaseData, server) {
             id : req.params.id
         }
 
-        recipe.getById(databaseData, commentData, function (err, result){
+        comment.getById(databaseData, commentData, function (err, result){
             
             res.setHeader('content-type', 'application/json')
             res.setHeader('accepts', 'GET')
@@ -582,7 +582,7 @@ exports.allRoutes = function (databaseData, server) {
             id : req.params.id
         }
 
-        recipe.deleteById(databaseData, commentData, function (err, result){
+        comment.deleteById(databaseData, commentData, function (err, result){
             
             if(err){
                 res.status(400);
@@ -603,7 +603,7 @@ exports.allRoutes = function (databaseData, server) {
             userId: req.body['userId']
         }
 
-        recipe.updateById(databaseData, commentData, function (err, result){
+        comment.updateById(databaseData, commentData, function (err, result){
             
             if(err){
                 res.status(400);
