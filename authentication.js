@@ -1,30 +1,25 @@
 'use strict'
 
 const db = require('./database');
-const auth = require ('basic-auth');
 
 exports.loginUser = (conData, request, callback) => {
 	
 	//first check if basic authorization is present
-	if (request.headers.authorization === undefined){
+	if (request.authorization === undefined || request.authorization.basic === undefined){
 		//throw new Error('authorization header missing')
-		let err = {
-			message:'Authorization header missing',
-			code: 401
-		};
+		let err = {message:'authorization header missing'};
+		console.log("-->" + err.message);
 		callback(err);
 		return;
 	}
 		
-	var loginData = auth(request);
+	const auth = request.authorization.basic
 
 	//extract username and password from the auth
-	if (loginData.name === undefined || loginData.pass === undefined){
+	if (auth.username === undefined || auth.password === undefined){
 		//throw new Error('missing username and/or password')
-		let err = {
-			message:'missing username and/or password',
-			code: 401
-		};
+		let err = {message:'missing username and/or password'};
+		console.log("-->" + err.message);
 		callback(err);
 		return;
 	}
@@ -34,17 +29,17 @@ exports.loginUser = (conData, request, callback) => {
 		
 		//when done check for any error
 		if (err) {
-			err.code = 500;
+			console.log("error in connecting to db")
 			callback(err);
 			return;
 		}	
 		
-		//perform the query, note we only select username not all fields
-		//TODO encrypt the passwords in db
-		data.query('SELECT id FROM users WHERE username="' + loginData.name + '" AND password="' + loginData.pass + '"', function (err, result) {
+		//perform the query, note we only select user id field
+		//please note we have not uet encrypted the passwords
+		data.query('SELECT id FROM users WHERE username="' + auth.username + '" AND password="' + auth.password + '"', function (err, result) {
 			
 			if(err){
-				err.code = 500;
+				console.log("error in executing the query")
 				callback(err);
 				return;
 			}
@@ -53,15 +48,10 @@ exports.loginUser = (conData, request, callback) => {
 			//return null for error with data indicating successful login
 			//return an error data with login false and null for data
 			//the calling module will be responsible to handle the response and set response code
-			if(result && result.length > 0){
-				callback(null, {userId : result[0].id});
-			}
-				
+			if(result && result.length > 0)
+				callback(null, {userId:result.id, login:true});
 			else
-				callback({
-					message : 'wrong username or password',
-					code: 401
-				});
+				callback({login:false});
 		});
 	});
 }
