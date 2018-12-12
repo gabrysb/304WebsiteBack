@@ -140,7 +140,6 @@ exports.allRoutes = function (databaseData, server) {
             password: req.body['password'],
             firstName: req.body['firstName'],
             lastName: req.body['lastName'],
-            email: req.body['email'],
             registrationDate : req.body['registrationDate']
         }
         //we are atempting to add a user
@@ -234,7 +233,6 @@ exports.allRoutes = function (databaseData, server) {
             password: req.body['password'],
             firstName: req.body['firstName'],
             lastName: req.body['lastName'],
-            email: req.body['email'],
             registrationDate : req.body['registrationDate']
         }
         //we are atempting to update a user
