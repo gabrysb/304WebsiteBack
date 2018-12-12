@@ -6,6 +6,10 @@ const cors = require('cors');
 //import body parser
 const bodyParser = require('body-parser');
 
+const fileUpload = require('express-fileupload');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+
 const routes = require('./routes');
 
 //create the express module
@@ -22,6 +26,12 @@ server.options('*', cors());
 
 //allow static files to serve the images
 server.use(express.static('public'));
+
+server.use(fileUpload());
+server.set('views', path.join(__dirname, 'views'));
+server.use(bodyParser.json());
+server.use(bodyParser.urlencoded({ extended: false }));
+server.use(cookieParser());
 
 //prepare our database connection parameters
 const databaseData = { 

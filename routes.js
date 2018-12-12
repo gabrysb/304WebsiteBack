@@ -140,7 +140,7 @@ exports.allRoutes = function (databaseData, server) {
             password: req.body['password'],
             firstName: req.body['firstName'],
             lastName: req.body['lastName'],
-            registrationDate : req.body['registrationDate']
+            registrationDate : new Date()
         }
         //we are atempting to add a user
         user.add(databaseData, userData, function (err, data){
@@ -305,6 +305,17 @@ exports.allRoutes = function (databaseData, server) {
         };
         
         recipe.add(databaseData, recipeData, function (err, result){
+
+            console.log(req);
+            let imageFile = req.files.file;
+          
+            imageFile.mv(`${__dirname}/public/${req.body.filename}.jpg`, function(err) {
+              if (err) {
+                return res.status(500).send(err);
+              }
+          
+              res.json({file: `public/${req.body.filename}.jpg`});
+            });
             
             if(err){
                 res.status(400);
@@ -314,7 +325,12 @@ exports.allRoutes = function (databaseData, server) {
             
             res.status(201);
             res.end(JSON.stringify(result));
+
+            
+          
         });
+
+            
     })
 
     server.get('/api/v1.0/recipes', (req, res) => {
@@ -750,4 +766,6 @@ exports.allRoutes = function (databaseData, server) {
         res.end("dump data were added successfully");
         
     });
+
+    
 };
