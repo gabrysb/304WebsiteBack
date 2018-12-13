@@ -296,7 +296,7 @@ exports.allRoutes = function (databaseData, server) {
         let recipeData = {
 			title: req.body['title'],
 			authorId: req.body['authorId'],
-            description: req.body['body'],
+            description: req.body['description'],
             ingredients: req.body['ingredients'],
             steps: req.body['steps'],
 			createdDate: new Date(),
@@ -310,9 +310,9 @@ exports.allRoutes = function (databaseData, server) {
             encodedStr: req.body['encodedStr']
         };
 
-        var base64Data = req.encodedString.replace(/^data:image\/png;base64,/, "");
+        var base64Data = recipeData.encodedStr.replace(/^data:image\/png;base64,/, "");
 
-        require("fs").writeFile(req.fileName, base64Data, 'base64', function (err) {
+        require("fs").writeFile('./public/img/'+recipeData.fileName, base64Data, 'base64', function (err) {
             console.log(err);
         });
         
@@ -320,7 +320,7 @@ exports.allRoutes = function (databaseData, server) {
         var temp = {
             title: req.body['title'],
             authorId: req.body['authorId'],
-            description: req.body['body'],
+            description: req.body['description'],
             ingredients: req.body['ingredients'],
             steps: req.body['steps'],
             createdDate: new Date(),
