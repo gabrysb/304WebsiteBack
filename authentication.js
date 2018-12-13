@@ -5,7 +5,7 @@ const db = require('./database');
 exports.loginUser = (conData, request, callback) => {
 
 	//first check if basic authorization is present
-	if (request.headers.authentication === undefined){
+	if (request.headers.authorization === undefined){
 		//throw new Error('authorization header missing')
 		let err = 400;
 		console.log("-->" + err.message);
@@ -13,9 +13,9 @@ exports.loginUser = (conData, request, callback) => {
 		return;
 	}
 		
-	var auth_header_user = Buffer.from(request.headers.authentication.split(' ')[1], 'base64').toString().split(":")[0];
+	var auth_header_user = Buffer.from(request.headers.authorization.split(' ')[1], 'base64').toString().split(":")[0];
 	
-	var auth_header_password = Buffer.from(request.headers.authentication.split(' ')[1], 'base64').toString().split(":")[1];
+	var auth_header_password = Buffer.from(request.headers.authorization.split(' ')[1], 'base64').toString().split(":")[1];
 
 	//extract username and password from the auth
 	if (auth_header_user === undefined || auth_header_password === undefined){
