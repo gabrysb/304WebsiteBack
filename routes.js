@@ -17,6 +17,7 @@ const db = require('./database');
 const dump = require('./dumpData');
 //import authentication module
 const auth = require('./authentication');
+var cors = require('cors');
 
 exports.allRoutes = function (databaseData, server) {
 
@@ -290,7 +291,7 @@ exports.allRoutes = function (databaseData, server) {
 
 
     //------------Recipes Routes-----------------
-    server.post('/api/v1.0/recipes', (req, res) => {
+    server.post('/api/v1.0/recipes', cors({origin: false}), (req, res) => {
         
         let recipeData = {
 			title: req.body['title'],
@@ -304,10 +305,34 @@ exports.allRoutes = function (databaseData, server) {
             category: req.body['category'],
             rating: 0,
             views: 0,
-            status: req.body['status']
+            status: req.body['status'],
+            fileName: req.body['fileName'],
+            encodedStr: req.body['encodedStr']
         };
 
-        recipe.add(databaseData, recipeData, function (err, result){
+        var base64Data = req.encodedString.replace(/^data:image\/png;base64,/, "");
+
+        require("fs").writeFile(req.fileName, base64Data, 'base64', function (err) {
+            console.log(err);
+        });
+        
+
+        var temp = {
+            title: req.body['title'],
+            authorId: req.body['authorId'],
+            description: req.body['body'],
+            ingredients: req.body['ingredients'],
+            steps: req.body['steps'],
+            createdDate: new Date(),
+            photo: req.body['photo'],
+            keywords: req.body['keywords'],
+            category: req.body['category'],
+            rating: 0,
+            views: 0,
+            status: req.body['status']
+        }
+
+        recipe.add(databaseData, temp, function (err, result){
             
             if(err){
                 res.status(400);
