@@ -3,20 +3,22 @@
 const db = require('./database');
 
 exports.loginUser = (conData, request, callback) => {
-	
+
 	//first check if basic authorization is present
-	if (request.authorization === undefined || request.authorization.basic === undefined){
+	if (request.headers.authentication === undefined){
 		//throw new Error('authorization header missing')
-		let err = {message:'authorization header missing'};
+		let err = 400;
 		console.log("-->" + err.message);
 		callback(err);
 		return;
 	}
 		
-	const auth = request.authorization.basic
+	var auth_header_user = Buffer.from(request.headers.authentication.split(' ')[1], 'base64').toString().split(":")[0];
+	
+	var auth_header_password = Buffer.from(request.headers.authentication.split(' ')[1], 'base64').toString().split(":")[1];
 
 	//extract username and password from the auth
-	if (auth.username === undefined || auth.password === undefined){
+	if (auth_header_user === undefined || auth_header_password === undefined){
 		//throw new Error('missing username and/or password')
 		let err = {message:'missing username and/or password'};
 		console.log("-->" + err.message);
@@ -36,7 +38,7 @@ exports.loginUser = (conData, request, callback) => {
 		
 		//perform the query, note we only select user id field
 		//please note we have not uet encrypted the passwords
-		data.query('SELECT id FROM users WHERE username="' + auth.username + '" AND password="' + auth.password + '"', function (err, result) {
+		data.query('SELECT id FROM users WHERE username="' + auth_header_user + '" AND password="' + auth_header_password + '"', function (err, result) {
 			
 			if(err){
 				console.log("error in executing the query")
@@ -49,7 +51,7 @@ exports.loginUser = (conData, request, callback) => {
 			//return an error data with login false and null for data
 			//the calling module will be responsible to handle the response and set response code
 			if(result && result.length > 0)
-				callback(null, {userId:result.id, login:true});
+				callback(null, {userId:result[0].id, login:true});
 			else
 				callback({login:false});
 		});

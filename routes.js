@@ -251,12 +251,12 @@ exports.allRoutes = function (databaseData, server) {
 
     //------------Login Routes-----------------
     server.post('/api/v1.0/login', (req, res) => {
-    
+
         auth.loginUser(databaseData, req, (err, result) => {
 
             if(err){
-                res.status(err.code);
-                res.end("error:" + err);
+                res.status(400);
+                res.end("error:" + err.code);
                 return;
             }
 
@@ -268,8 +268,8 @@ exports.allRoutes = function (databaseData, server) {
             //we are adding a login attempt
             login.add(databaseData, loginData, function (err, finalResult){
                 
-                res.setHeader('content-type', 'application/json')
-                res.setHeader('accepts', 'POST')
+                // res.setHeader('content-type', 'application/json')
+                // res.setHeader('accepts', 'POST')
                 //when adding a user is done, this code will run
                 //if we got an error informs the client and set the proper response code
                 if(err){
@@ -282,6 +282,9 @@ exports.allRoutes = function (databaseData, server) {
                 res.status(201);
                 res.end(JSON.stringify(loginData));
             });
+
+            res.status(201);
+                res.end(JSON.stringify(loginData));
         });
     });
 
