@@ -306,19 +306,8 @@ exports.allRoutes = function (databaseData, server) {
             views: 0,
             status: req.body['status']
         };
-        
-        recipe.add(databaseData, recipeData, function (err, result){
 
-            console.log(req);
-            let imageFile = req.files.file;
-          
-            imageFile.mv(`${__dirname}/public/${req.body.filename}.jpg`, function(err) {
-              if (err) {
-                return res.status(500).send(err);
-              }
-          
-              res.json({file: `public/${req.body.filename}.jpg`});
-            });
+        recipe.add(databaseData, recipeData, function (err, result){
             
             if(err){
                 res.status(400);
@@ -328,13 +317,10 @@ exports.allRoutes = function (databaseData, server) {
             
             res.status(201);
             res.end(JSON.stringify(result));
-
-            
-          
         });
 
-            
-    })
+    });
+
 
     server.get('/api/v1.0/recipes', (req, res) => {
         
